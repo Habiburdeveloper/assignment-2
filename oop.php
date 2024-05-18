@@ -49,6 +49,7 @@ class Book{
    class Member{
     // TODO: Add properties as Private
     private $name;
+    private $borrowBook = [];
    
    
     public function __construct($name = "") {
@@ -64,20 +65,62 @@ class Book{
     }
     
     // TODO: Add borrowBook method
-    public function borrowBook($getBook = 0){
-        $borrowBook = $getBook;
-        return $borrowBook;
+    public function borrowBook(Book $getBook){
+            
+        $this -> borrowBook[] = $getBook;
     }
     
    
    
    
     // TODO: Add returnBook method
-    public function returnBook($return = 0){
-        $returnBook = $return;
-        return $returnBook;
+    public function returnBook(Book $return){
+       $key = array_search($return , $this -> borrowBook);
+       if($key !== false){
+        unset($this -> borrowBook[$key]);
+       }
     }
     
+   }
+
+
+   class Library{
+    private $books = [];
+    private $members = [];
+
+    public function addBook(Book $book){
+        $this -> books[] = $book;
+    }
+    public function addMembers(Member $member){
+        $this -> members[] = $member;
+    }
+    public function availableBooks(){
+        foreach($this -> books as $book){
+            echo "Available Books :". $book-> getTitle().$book-> borrowBook();
+        }
+    }
+    public function returnBooks(){
+        foreach($this -> books as $book){
+            echo "Available Books :". $book-> getTitle().$book-> returnBook();
+        }
+    }
+
+    public function increase($title, $increase){
+        foreach($this -> books as $book){
+            if($book-> getTitle() === $title){
+                $book -> returnBook($increase);
+                return;
+            }
+        }
+    }
+    public function dicrease($title, $dicrease){
+        foreach($this -> books as $book){
+            if($book-> getTitle() === $title){
+                $book -> borrowBook($dicrease);
+                return;
+            }
+        }
+    }
    }
    
    
@@ -89,44 +132,32 @@ class Book{
     // TODO: Create 2 books with the following properties
    
    //  book 1
-   $bookObject = new Book("The Great Gatsby", 5);
-   $bookObject -> getTitle();
-   $bookObject -> getAvailableCopies();
-   $bookObject -> borrowBook(1)."<br>";
-   $bookObject -> returnBook();
+   $book1 = new Book("The Great Gatsby", 5);
+   $book2 = new Book("To Kill a Mockingbird", 3);
 
-   // book 2
-   $book_2_object = clone $bookObject;
-   $book_2_object = new Book("To Kill a Mockingbird", 3);
-   $book_2_object -> getTitle();
-   $book_2_object -> getAvailableCopies();
-   $book_2_object -> borrowBook(1)."<br><br><br><br>";
-   $book_2_object -> returnBook();
 
- 
-   
    // TODO: Create 2 members with the following properties
 
     //  member 1
-    $memberObject = new Member("Jone Doe");
-    $name_1 = "Member 1 - Name :". $memberObject -> getName()."<br>";
-    $memberObject -> borrowBook(1);
-    $memberObject -> returnBook();
- 
-    //  member 2
-    $member_2_Object = clone $memberObject;
-    $member_2_Object = new Member("Jane Smith");
-    $name_2 = "Member 2 - Name :". $member_2_Object -> getName();
-    $member_2_Object -> borrowBook(1);
-    $member_2_Object -> returnBook();
+    $member1 = new Member("Jone Doe");
+    $member2 = new Member("Jane Doe");
+    
 
 
    // TODO: Apply Borrow book method to each member
-   function bookLibrary(){
+   $library = new Library();
+   $library -> addBook($book1);
+   $library -> addBook($book2);
 
-   }
-   
-   
+   $library -> addMembers($member1);
+   $library -> addMembers($member2);
+
+   $member1 -> borrowBook($book1);
+   $member2 -> borrowBook($book2);
+
+
+   $library -> dicrease("The Great Gatsby",1);
+   $library -> dicrease("To Kill a Mockingbird",1);
    // TODO: Print Available Copies with their names:
-   echo"Available Copies : ". $bookObject -> getTitle()."-".$bookObject -> borrowBook()."<br>";
-   echo"Available Copies : ". $book_2_object -> getTitle()."-".$book_2_object -> borrowBook()."<br>";
+   echo"Available Copies : ". $book1 -> getTitle()."-".$book1 -> borrowBook()."<br>";
+   echo"Available Copies : ". $book2 -> getTitle()."-".$book2 -> borrowBook()."<br>";
