@@ -46,7 +46,7 @@ class Book{
    }
    
    
-   class Member extends Book{
+   class Member{
     // TODO: Add properties as Private
     private $name;
    
@@ -123,7 +123,7 @@ class Book{
 
    // TODO: Apply Borrow book method to each member
    function bookLibrary(){
-    
+
    }
    
    
